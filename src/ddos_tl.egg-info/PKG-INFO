@@ -1,0 +1,5 @@
+Metadata-Version: 2.4
+Name: ddos-tl
+Version: 0.1.0
+Summary: Classification multiclasses des attaques DDoS (CIC-DDoS2019) par Transfer Learning
+Requires-Python: >=3.10

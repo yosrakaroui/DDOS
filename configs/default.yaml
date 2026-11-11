@@ -1,0 +1,70 @@
+seed: 42
+
+paths:
+  source_raw: data/raw/cic_ids2017      # dataset source (pré-entraînement)
+  target_raw: data/raw/cic_ddos2019     # dataset cible (Transfer Learning)
+  processed: data/processed
+  models: models
+  results: reports/results
+  figures: reports/figures
+
+data:
+  label_column: Label
+  provenance:
+    source: "Local user-provided CIC-IDS2017 mirror; upstream provenance not independently verified."
+    target: "Local user-provided CIC-DDoS2019 mirror; upstream provenance not independently verified."
+  # Pré-entraînement CIC-IDS2017 : un seul fichier DDoS, avec mapping binaire explicite.
+  source_files:
+    - "Friday-WorkingHours-Afternoon-DDos.pcap_ISCX.csv"
+  source_label_mapping:
+    BENIGN: 0
+    DDoS: 1
+  # Colonnes d'identification : sources de "shortcut learning", à exclure des features.
+  # Vérifie les noms réels dans tes CSV (les espaces en début de nom sont retirés automatiquement).
+  drop_columns:
+    - "Unnamed: 0"
+    - "Flow ID"
+    - "Source IP"
+    - "Destination IP"
+    - "Source Port"
+    - "Destination Port"
+    - "Timestamp"
+    - "SimillarHTTP"
+  sample_frac_per_file: null     # ex. 0.05 pour lire 5 % des lignes de chaque CSV (fichiers très lourds)
+  min_rows_per_class: 50         # classes plus rares que ça sont retirées
+  max_rows_per_class: 20000      # plafond par classe (échantillonnage stratifié)
+  clip: 10.0                     # valeurs standardisées bornées à [-clip, clip]
+  split:
+    mode: random                 # random | by_file
+    val_size: 0.15
+    test_size: 0.15
+    # Utilisé seulement si mode = by_file (noms de fichiers CSV sans extension) :
+    train_files: []
+    test_files: []
+
+model:
+  hidden: [256, 128, 64]         # architecture du backbone (identique pré-entraînement et transfert)
+  dropout: 0.2
+
+training:
+  epochs: 30
+  batch_size: 512
+  lr: 0.001
+  weight_decay: 0.00001
+  patience: 5
+  use_class_weights: true
+  device: auto                   # auto | cpu | cuda
+
+transfer:
+  head_epochs: 5                 # étape 1 : entraînement de la nouvelle tête (backbone gelé)
+  finetune_lr_factor: 0.1        # lr du backbone = lr * facteur
+  partial_freeze_blocks: 1       # nombre de blocs gelés pour la stratégie "partial"
+  stage_epochs: 3                # epochs par étape pour "progressive"
+
+experiments:
+  fractions: [0.01, 0.05, 0.10, 1.0]
+  strategies: [scratch, frozen, partial, finetune, progressive]
+  seeds: [0, 1, 2]
+
+app:
+  max_rows: 200000

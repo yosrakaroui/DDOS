@@ -1,0 +1,26 @@
+# Environnement
+.venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+.pytest_cache/
+.idea/
+.vscode/
+
+# Données volumineuses (ne jamais versionner les datasets)
+data/raw/*
+data/processed/*
+data/synthetic/
+!data/raw/.gitkeep
+!data/raw/*/.gitkeep
+!data/processed/.gitkeep
+
+# Artefacts d'entraînement
+models/*
+!models/.gitkeep
+reports/results/*
+reports/figures/*
+!reports/results/.gitkeep
+!reports/figures/.gitkeep
+*.pt
+*.npz

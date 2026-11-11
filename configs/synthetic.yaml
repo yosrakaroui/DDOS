@@ -1,0 +1,32 @@
+# Configuration de test rapide sur données synthétiques (smoke test, aucun téléchargement)
+_base: default.yaml
+
+paths:
+  source_raw: data/synthetic/raw/cic_ids2017
+  target_raw: data/synthetic/raw/cic_ddos2019
+  processed: data/synthetic/processed
+  models: data/synthetic/models
+  results: data/synthetic/results
+  figures: data/synthetic/figures
+
+data:
+  provenance:
+    source: "Generated synthetic source data for smoke tests only."
+    target: "Generated synthetic target data for smoke tests only."
+  source_files: null
+  source_label_mapping: null
+  min_rows_per_class: 30
+  max_rows_per_class: 5000
+
+training:
+  epochs: 8
+  batch_size: 128
+  patience: 3
+
+transfer:
+  head_epochs: 3
+  stage_epochs: 2
+
+experiments:
+  fractions: [0.1, 0.5, 1.0]
+  seeds: [0, 1]

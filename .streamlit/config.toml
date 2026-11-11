@@ -1,0 +1,2 @@
+[server]
+maxUploadSize = 100   # Mo : limite de taille des CSV importés

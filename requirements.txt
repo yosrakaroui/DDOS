@@ -1,0 +1,13 @@
+# Installer PyTorch d'abord selon ta machine (CPU/GPU) : https://pytorch.org/get-started/locally/
+torch
+numpy
+pandas
+scikit-learn
+pyyaml
+matplotlib
+seaborn
+optuna
+streamlit
+pytest
+jupyterlab
+# Une fois l'environnement stable : pip freeze > requirements.lock
